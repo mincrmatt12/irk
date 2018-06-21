@@ -21,7 +21,7 @@ echo "$rosinstallcontents" > package_new.rosinstall
 wstool merge -y --merge-keep -t src package_new.rosinstall
 wstool update -t src
 rosdep install --from-paths src --ignore-src --rosdistro kinetic -y
-catkin config --instal
+catkin config --install
 catkin build
 echo "Installed $package"
 popd

@@ -1,8 +1,8 @@
 import os
+import subprocess
 import tempfile
 
 from irk.installers.common import Installer, InstallerState
-from irk.util import proc
 
 
 class ScriptInstaller(Installer):
@@ -18,7 +18,7 @@ class ScriptInstaller(Installer):
         os.write(f, bytes(self.script_contents, encoding="ascii"))
         os.chmod(n, 0o775)
         os.close(f)
-        code, stdout = proc.run(n + " " + self.package, shell=True)
+        code = subprocess.call(n + " " + self.package, shell=True)
         os.unlink(n)
         if code == 0:
             return InstallerState.OK
