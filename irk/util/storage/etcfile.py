@@ -5,7 +5,7 @@ import io
 
 ETC_DIR = "/etc/irk"
 if not os.path.exists(ETC_DIR):
-    os.makedirs(ETC_DIR, 0o775, True)
+    os.makedirs(ETC_DIR, 0o777, True)
 
 ETC_PATH = pathlib.Path(ETC_DIR)
 
