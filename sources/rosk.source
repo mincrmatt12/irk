@@ -1,0 +1,27 @@
+CREGX
+rosk
+ros-kinetic-[\w\-\_]+
+CONFIGLINE
+#!/usr/bin/env bash
+
+package=$(echo $1 | sed -e 's/ros-kinetic-//g' -e 's/-/_/g')
+
+rosinstallcontents=`rosinstall_generator --deps --wet-only --rosdistro kinetic $package`
+if [[ $rosinstallcontents == "" ]]
+then
+	echo "Invalid package"
+	exit 101
+fi
+
+set -e
+
+pushd .
+cd ~/ros_kinetic
+echo "$rosinstallcontents" > package_new.rosinstall
+wstool merge -y --merge-keep -t src package_new.rosinstall
+wstool update -t src
+rosdep install --from-paths src --ignore-src --rosdistro kinetic -y
+./src/catkin/bin/catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release
+echo "Installed $package"
+popd
+exit 0
