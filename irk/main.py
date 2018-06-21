@@ -1,6 +1,7 @@
 import click
 from .commands.update import update as update_impl
 from .commands.install import install as install_impl
+from .commands.remove import remove as remove_impl
 from .util.version import VERSION_STRING, COPYRIGHT
 
 
@@ -22,4 +23,12 @@ def update():
 @click.option("-r", "--resolver", default=None, type=str, help="Use this resolver specifically")
 @click.argument("name")
 def install(dry_run, resolver, name):
-    install_impl(name, resolver, dry_run)
+    exit(install_impl(name, resolver, dry_run))
+
+
+@main.command()
+@click.option("--dry-run/--no-dry-run", help="Print commands/actions to be ran")
+@click.option("-r", "--resolver", default=None, type=str, help="Use this resolver specifically")
+@click.argument("name")
+def remove(dry_run, resolver, name):
+    exit(remove_impl(name, resolver, dry_run))

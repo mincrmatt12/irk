@@ -13,5 +13,8 @@ class Installer:
     def install(self, dry_run):
         return InstallerState.OK
 
+    def remove(self, dry_run):
+        return InstallerState.OK
+
     def get_dependencies(self):
         return []

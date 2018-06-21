@@ -3,28 +3,13 @@ from irk.util.proc import elevate
 from irk.util.storage import resolv
 
 
-def try_to_install(resolver, package, dry_run):
-    installer = resolver.resolve_to_installer(package)
-    for dep in installer.get_dependencies():
-        print("Installing dependency {}".format(dep))
-        install(dep, dry_run)
-    code = installer.install(dry_run)
-    if code == InstallerState.HAS_DEPS:
-        print("WARN: Detected dependency errors, attempting to installing dependencies")
-        for dep in installer.get_dependencies():
-            print("Installing dependency {}".format(dep))
-            install(dep, dry_run)
-        code = installer.install(dry_run)
-    return code
-
-
-def install(package, specific_resolver=None, dry_run=False):
+def remove(package, specific_resolver=None, dry_run=False):
     for resolver in resolv.get_matching_resolvers(package):
         if specific_resolver is None or resolver.get_resolver_name() == specific_resolver:
             print(f"Using resolver {resolver.get_resolver_name()}")
-            code = try_to_install(resolver, package, dry_run)
+            code = resolver.resolve_to_installer(package).remove(dry_run)
             if code == InstallerState.OK:
-                print("Installed {}".format(package))
+                print("Removed {}".format(package))
                 return 0
             elif code == InstallerState.INVALID_NAME:
                 print("Trying next resolver...")
@@ -37,5 +22,3 @@ def install(package, specific_resolver=None, dry_run=False):
                 return 1
     print("ERR: Invalid package!")
     return 2
-
-
