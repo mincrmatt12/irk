@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 from irk.util.version import VERSION_STRING
 
 
@@ -7,7 +7,7 @@ with open("requirements.txt") as f:
 
 
 setup(
-    packages=["irk"],
+    packages=find_packages(),
     name="irk",
     version=VERSION_STRING,
     install_requires=requirements,
