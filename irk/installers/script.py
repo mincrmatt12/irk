@@ -14,15 +14,17 @@ class ScriptInstaller(Installer):
         if dry_run:
             print("Would run a custom script, unable to show contents.")
             return InstallerState.OK
-        with tempfile.NamedTemporaryFile("w") as f:
-            f.write(self.script_contents)
-            os.chmod(f.name, 0o775)
-            code, stdout = proc.run(f.name + " " + self.package)
-            if code == 0:
-                return InstallerState.OK
-            if code == 101:
-                return InstallerState.INVALID_NAME
-            return InstallerState.FAILED
+        f, n = tempfile.mkstemp(text=True)
+        os.write(f, bytes(self.script_contents, encoding="ascii"))
+        os.chmod(n, 0o775)
+        os.close(f)
+        code, stdout = proc.run(n + " " + self.package, shell=True)
+        os.unlink(n)
+        if code == 0:
+            return InstallerState.OK
+        if code == 101:
+            return InstallerState.INVALID_NAME
+        return InstallerState.FAILED
 
     def remove(self, dry_run):
         print("NOTIMPL: You can't remove script-based things yet..")

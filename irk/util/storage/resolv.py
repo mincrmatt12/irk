@@ -49,8 +49,9 @@ def update_cache():
             f.write(str(len(c)))
             f.write("\n")
             f.write(c)
-            f.write(str(len(d)-1))
+            f.write(str(len(d)))
             f.write("\n")
+            f.write(d)
     print(" done")
     print("Source list updated")
 
@@ -71,12 +72,16 @@ def get_matching_resolvers(package):
             c_len = int(c_len[:-1])
             c = f.read(c_len)
             config_line = c.splitlines(keepends=False)[0]
-            resolver_type = [x for x in ALL_RESOLVER_TYPES if x.get_check_line() == config_line][0]
             d_len = f.readline()
             d_len = int(d_len[:-1])
             d = f.read(d_len)
+            f_seek = f.tell()
+            try:
+                resolver_type = [x for x in ALL_RESOLVER_TYPES if x.get_check_line() == config_line][0]
+            except IndexError:
+                print("WARN: Can't interpret type {}".format(config_line))
+                continue
             resolver = resolver_type(c, d)
             loaded.append(resolver)
-            f_seek = f.tell()
             if resolver.provides(package):
                 yield resolver
