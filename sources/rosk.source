@@ -21,7 +21,8 @@ echo "$rosinstallcontents" > package_new.rosinstall
 wstool merge -y --merge-keep -t src package_new.rosinstall
 wstool update -t src
 rosdep install --from-paths src --ignore-src --rosdistro kinetic -y
-./src/catkin/bin/catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release
+catkin config --instal
+catkin build
 echo "Installed $package"
 popd
 exit 0
