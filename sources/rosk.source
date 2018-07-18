@@ -22,7 +22,7 @@ wstool merge -y --merge-keep -t src package_new.rosinstall
 wstool update -t src
 rosdep install --from-paths src --ignore-src --rosdistro kinetic -y
 catkin config --install
-catkin build
+catkin build $package
 echo "Installed $package"
 popd
 exit 0
